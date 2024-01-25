@@ -1,25 +1,13 @@
 import pandas as pd
-import logging
-import sys
+import datetime
 from client import *
-from helpers import *
+from logger import *
 
 #setup logger
-logger = logging.getLogger()
-logging_level = "INFO"
-set_logging_level(logger, logging_level)
-formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', 
-                              '%m-%d-%Y %H:%M:%S')
-stdout_handler = logging.StreamHandler(sys.stdout)
-stdout_handler.setFormatter(formatter)
-logger.addHandler(stdout_handler)
+logger = set_up_logger(logging_level="INFO")
 
+#class initialization
 fotmobLeagues = FotmobLeagues(logger)
-
-# fotmobLeagues.get_league_fixtures(87, "2023/2024")
-# fotmobLeagues.extract_details()
-# fotmobLeagues.extract_matches()
-# df = fotmobLeagues.process_dataframe()
 
 # Define leagues and target seasons
 leagues = [
@@ -32,7 +20,7 @@ leagues = [
 ]
 
 #define how many seasons starting from last one we want to extract
-amount_seasons = 10 
+amount_seasons = 5
 last_season = "2023/2024"
 last_year = int(last_season.split("/")[1])
 first_year = last_year - amount_seasons
@@ -47,13 +35,16 @@ for year in range(first_year, last_year):
 all_matches_df = pd.DataFrame()
 
 for league in leagues:
-    logger.info("Processing... League: %s. Seasons: %s." %(league["name"],seasons))
     for season in seasons:
+        start_time = datetime.datetime.now()
+        logger.info("Processing... League: %s. Season: %s." %(league["name"],season))
         fotmobLeagues.get_league_fixtures(league["id"], season)
         fotmobLeagues.extract_details()
         fotmobLeagues.extract_matches()
         df = fotmobLeagues.process_dataframe()
         all_matches_df = pd.concat([all_matches_df, df], ignore_index=True)
+        end_time = datetime.datetime.now()
+        logger.info("League %s. Season %s. Processed. Total time: %s" %(league["name"], season, end_time-start_time))
 
 #debugging info
 logger.debug(type(all_matches_df))
@@ -61,7 +52,7 @@ logger.debug(all_matches_df.shape)
 logger.debug(all_matches_df.isna().sum())
 
 #save data
-csv_file = "test.csv"
+csv_file = "AllMatches.csv"
 logger.info("Saving csv file... to %s" %csv_file)
 try:
     logger.info("Succesfully saved file")
