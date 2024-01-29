@@ -1,0 +1,6 @@
+*.json
+*.csv
+*/__pycache__
+/__pycache__
+fotmob-dashboard/logo/*
+*-test/
