@@ -1,4 +1,5 @@
 import pandas as pd
+import urllib.request
 from logger import *
 
 #################
@@ -8,9 +9,9 @@ from logger import *
 logging_level = "INFO"
 logger = set_up_logger(logging_level=logging_level)
 
-##############
+#############
 # INGESTION #
-##############
+#############
 
 #read data
 csv_file = "AllMatches.csv"
@@ -49,13 +50,20 @@ logger.debug(f"Dtypes transformed:{df.dtypes}")
 #remove irrelevant missing values
 df = df.dropna(subset=["home_expected_goals"], axis=0) #identified entry with some missing info (not relevant)
 df = df.dropna(subset=["home_score","away_score"], axis=0) #remove rows if result not available
-df = df.drop(["home_ShotsOffTarget","away_ShotsOffTarget","home_Offsides","away_Offsides"], axis=1) #some columns only exist for that problematic entry, remove them
+if "home_ShotsOffTarget" in df.columns:
+    df = df.drop(["home_ShotsOffTarget","away_ShotsOffTarget","home_Offsides","away_Offsides"], axis=1) #some columns only exist for that problematic entry, remove them
 
 logger.debug(f"Shape after dealing with missing values: {df.shape}")
 
 ###################
 # PROCESSING DATA #
 ###################
+
+#save logo of each team
+for team_id in df["home_team_id"].unique():
+    image_url = f'https://images.fotmob.com/image_resources/logo/teamlogo/{team_id}_small.png' #the image on the web
+    save_name = 'fotmob-dashboard/logo/' + f"{team_id}_small.png" #local name to be saved
+    urllib.request.urlretrieve(image_url, save_name)
 
 #one row per game per team (i.e., 2 rows per game)
 #each row contains info about the match of that specific team (did it win? did it play home?)
