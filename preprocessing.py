@@ -14,7 +14,8 @@ logger = set_up_logger(logging_level=logging_level)
 #############
 
 #read data
-csv_file = "AllMatches.csv"
+csv_folder = "data/"
+csv_file = csv_folder + "AllMatches.csv"
 df = pd.read_csv(csv_file, sep=";", decimal=",")
 missing_raw = df.isna().sum()
 
@@ -120,5 +121,6 @@ logger.debug(f"Clean shape: {df_game_per_team.shape}")
 logger.debug(f"Dtypes clean:{df_game_per_team.dtypes}")
 
 
-csv_file = "AllMatchesByTeam.csv"
+csv_folder = "data/"
+csv_file = csv_folder + "AllMatches.csv"
 df_game_per_team.to_csv(csv_file, sep=";", decimal=",", index=False)

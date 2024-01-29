@@ -52,7 +52,8 @@ logger.debug(all_matches_df.shape)
 logger.debug(all_matches_df.isna().sum())
 
 #save data
-csv_file = "AllMatches.csv"
+csv_folder = "data/"
+csv_file = csv_folder + "AllMatches.csv"
 logger.info("Saving csv file... to %s" %csv_file)
 try:
     logger.info("Succesfully saved file")
