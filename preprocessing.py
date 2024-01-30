@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import urllib.request
 from logger import *
 
@@ -6,7 +7,7 @@ from logger import *
 # LOGGER SET-UP #
 #################
 
-logging_level = "INFO"
+logging_level = os.getenv("LOG_LEVEL", "INFO")
 logger = set_up_logger(logging_level=logging_level)
 
 #############

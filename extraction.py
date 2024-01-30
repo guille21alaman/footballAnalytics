@@ -2,9 +2,11 @@ import pandas as pd
 import datetime
 from client import *
 from logger import *
+import os
 
 #setup logger
-logger = set_up_logger(logging_level="INFO")
+logging_level = os.getenv("LOG_LEVEL", "INFO")
+logger = set_up_logger(logging_level=logging_level)
 
 #class initialization
 fotmobLeagues = FotmobLeagues(logger)
