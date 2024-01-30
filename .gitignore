@@ -2,7 +2,5 @@
 *.csv
 *data/
 *.vscode/
-*/__pycache__
-/__pycache__
-fotmob-dashboard/logo/
-*-test/
+**/__pycache__
+**/logo/
